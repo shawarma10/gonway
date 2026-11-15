@@ -32,13 +32,6 @@ type Game struct {
 
 func NewGame() *Game {
 	g := &Game{canvas: image.NewRGBA(image.Rect(0, 0, width, height))}
-
-	for x := range width/2 {
-		for y := range height/4 {
-			g.cells[x][y] = true
-		}
-	}
-	
 	return g
 }
 
@@ -114,6 +107,11 @@ func (g *Game) Update() error {
 	// Pause/Unpause
 	if inpututil.IsKeyJustPressed(ebiten.KeySpace) {
 		g.isPaused = !g.isPaused
+		if g.isPaused {
+			ebiten.SetWindowTitle("Gonway [Paused]")
+		} else {
+			ebiten.SetWindowTitle("Gonway")
+		}
 	}
 	
 	if !g.isPaused {
