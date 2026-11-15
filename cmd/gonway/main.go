@@ -89,12 +89,16 @@ func (g *Game) UpdateGeneration() {
 func (g *Game) Update() error {
 	if ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft) {
 		x, y := ebiten.CursorPosition()
-		g.cells[x][y] = true
+		if x >= 0 && x < width && y >= 0 && y < height {
+			g.cells[x][y] = true
+		}
 	}
 
 	if ebiten.IsMouseButtonPressed(ebiten.MouseButtonRight) {
 		x, y := ebiten.CursorPosition()
-		g.cells[x][y] = false
+		if x >= 0 && x < width && y >= 0 && y < height {
+			g.cells[x][y] = false
+		}
 	}
 
 	if inpututil.IsKeyJustPressed(ebiten.Key1) {
