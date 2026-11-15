@@ -6,6 +6,7 @@ import (
 	"log"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
 
 const (
@@ -26,6 +27,7 @@ type Game struct {
 	canvas *image.RGBA
 	cells [width][height]bool
 	ticks int
+	isPaused bool
 }
 
 func NewGame() *Game {
@@ -90,13 +92,38 @@ func (g *Game) UpdateGeneration() {
 }
 
 func (g *Game) Update() error {
-	g.ticks++
-	if g.ticks%6 == 0 {
-		g.UpdateGeneration()
+	if ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft) {
+		x, y := ebiten.CursorPosition()
+		g.cells[x][y] = true
+	}
+
+	if ebiten.IsMouseButtonPressed(ebiten.MouseButtonRight) {
+		x, y := ebiten.CursorPosition()
+		g.cells[x][y] = false
+	}
+	
+	// Reset
+	if inpututil.IsKeyJustPressed(ebiten.KeyR) {
+		for i, x := range g.cells {
+			for j, _ := range x {
+				g.cells[i][j] = false
+			}
+		}
+	}
+	
+	// Pause/Unpause
+	if inpututil.IsKeyJustPressed(ebiten.KeySpace) {
+		g.isPaused = !g.isPaused
+	}
+	
+	if !g.isPaused {
+		g.ticks++
+		if g.ticks%6 == 0 {
+			g.UpdateGeneration()
+		}
 	}
 	
 	g.canvas = image.NewRGBA(image.Rect(0, 0, width, height))
-	
 	for i, x := range g.cells {
 		for j, y := range x {
 			if y {
