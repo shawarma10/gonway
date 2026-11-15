@@ -27,11 +27,13 @@ type Game struct {
 	canvas *image.RGBA
 	cells [width][height]bool
 	ticks int
+	speed int
 	isPaused bool
 }
 
 func NewGame() *Game {
 	g := &Game{canvas: image.NewRGBA(image.Rect(0, 0, width, height))}
+	g.speed = 6
 	return g
 }
 
@@ -94,6 +96,46 @@ func (g *Game) Update() error {
 		x, y := ebiten.CursorPosition()
 		g.cells[x][y] = false
 	}
+
+	if inpututil.IsKeyJustPressed(ebiten.Key1) {
+		g.speed = 1
+	}
+	
+	if inpututil.IsKeyJustPressed(ebiten.Key2) {
+		g.speed = 2
+	}
+	
+	if inpututil.IsKeyJustPressed(ebiten.Key3) {
+		g.speed = 3
+	}
+	
+	if inpututil.IsKeyJustPressed(ebiten.Key4) {
+		g.speed = 4
+	}
+	
+	if inpututil.IsKeyJustPressed(ebiten.Key5) {
+		g.speed = 5
+	}
+
+	if inpututil.IsKeyJustPressed(ebiten.Key6) {
+		g.speed = 6
+	}
+	
+	if inpututil.IsKeyJustPressed(ebiten.Key7) {
+		g.speed = 7
+	}
+	
+	if inpututil.IsKeyJustPressed(ebiten.Key8) {
+		g.speed = 8
+	}
+	
+	if inpututil.IsKeyJustPressed(ebiten.Key9) {
+		g.speed = 9
+	}
+	
+	if inpututil.IsKeyJustPressed(ebiten.Key0) {
+		g.speed = 10
+	}
 	
 	// Reset
 	if inpututil.IsKeyJustPressed(ebiten.KeyR) {
@@ -116,7 +158,7 @@ func (g *Game) Update() error {
 	
 	if !g.isPaused {
 		g.ticks++
-		if g.ticks%6 == 0 {
+		if g.ticks%g.speed == 0 {
 			g.UpdateGeneration()
 		}
 	}
