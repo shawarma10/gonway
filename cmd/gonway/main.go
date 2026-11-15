@@ -2,8 +2,8 @@ package main
 
 import (
 	"image"
-	"log"
 	"image/color"
+	"log"
 
 	"github.com/hajimehoshi/ebiten/v2"
 )
@@ -15,44 +15,33 @@ const (
 
 type Game struct {
 	canvas *image.RGBA
-	red bool
-	green bool
-	blue bool
+	cells [160][120]bool
 }
 
-func (g *Game) Update() error {
-	if ebiten.IsKeyPressed(ebiten.KeyG) {
-		g.green = !g.green
-	}
+func NewGame() *Game {
+	g := &Game{canvas: image.NewRGBA(image.Rect(0, 0, width, height))}
 
-	if ebiten.IsKeyPressed(ebiten.KeyR) {
-		g.red = !g.red
-	}
-
-	if ebiten.IsKeyPressed(ebiten.KeyB) {
-		g.blue = !g.blue
-	}
-	
-	if ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft) {
-		x, y := ebiten.CursorPosition()
-		if x >= 0 && x < width && y >= 0 && y < height {
-			var redVal, greenVal, blueVal uint8 = 0, 0, 0
-			if g.red {
-				redVal = 255
-			}
-			
-			if g.green {
-				greenVal = 255
-			}
-			
-			if g.blue {
-				blueVal = 255
-			}
-			
-			g.canvas.Set(x, y, color.RGBA{redVal, greenVal, blueVal, 255})
+	for x := range width {
+		for y := range height/2 {
+			g.cells[x][y] = true
 		}
 	}
 	
+	return g
+}
+
+func (g *Game) Update() error {
+	g.canvas = image.NewRGBA(image.Rect(0, 0, width, height))
+	for i, x := range g.cells {
+		for j, y := range x {
+			if y {
+				g.canvas.Set(i, j, color.White)
+			} else {
+				g.canvas.Set(i, j, color.Black)
+			}
+		}
+	}
+
 	return nil
 }
 
@@ -66,9 +55,9 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
 
 func main() {
 	ebiten.SetWindowSize(width*4, height*4)
-	ebiten.SetWindowTitle("Hello, Ebitengine")
+	ebiten.SetWindowTitle("Gonway")
 
-	g := &Game{canvas: image.NewRGBA(image.Rect(0, 0, width, height))}
+	g := NewGame()
 	if err := ebiten.RunGame(g); err != nil {
 		log.Fatal(err)
 	}
