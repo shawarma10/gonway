@@ -24,10 +24,10 @@ func NewPoint(x, y int) Point {
 }
 
 type Game struct {
-	canvas *image.RGBA
-	cells [width][height]bool
-	ticks int
-	speed int
+	canvas   *image.RGBA
+	cells    [width][height]bool
+	ticks    int
+	speed    int // Ironically, the higher the speed, the slower the game.
 	isPaused bool
 }
 
@@ -100,19 +100,19 @@ func (g *Game) Update() error {
 	if inpututil.IsKeyJustPressed(ebiten.Key1) {
 		g.speed = 1
 	}
-	
+
 	if inpututil.IsKeyJustPressed(ebiten.Key2) {
 		g.speed = 2
 	}
-	
+
 	if inpututil.IsKeyJustPressed(ebiten.Key3) {
 		g.speed = 3
 	}
-	
+
 	if inpututil.IsKeyJustPressed(ebiten.Key4) {
 		g.speed = 4
 	}
-	
+
 	if inpututil.IsKeyJustPressed(ebiten.Key5) {
 		g.speed = 5
 	}
@@ -120,23 +120,23 @@ func (g *Game) Update() error {
 	if inpututil.IsKeyJustPressed(ebiten.Key6) {
 		g.speed = 6
 	}
-	
+
 	if inpututil.IsKeyJustPressed(ebiten.Key7) {
 		g.speed = 7
 	}
-	
+
 	if inpututil.IsKeyJustPressed(ebiten.Key8) {
 		g.speed = 8
 	}
-	
+
 	if inpututil.IsKeyJustPressed(ebiten.Key9) {
 		g.speed = 9
 	}
-	
+
 	if inpututil.IsKeyJustPressed(ebiten.Key0) {
 		g.speed = 10
 	}
-	
+
 	// Reset
 	if inpututil.IsKeyJustPressed(ebiten.KeyR) {
 		for i, x := range g.cells {
@@ -145,7 +145,7 @@ func (g *Game) Update() error {
 			}
 		}
 	}
-	
+
 	// Pause/Unpause
 	if inpututil.IsKeyJustPressed(ebiten.KeySpace) {
 		g.isPaused = !g.isPaused
@@ -155,14 +155,14 @@ func (g *Game) Update() error {
 			ebiten.SetWindowTitle("Gonway")
 		}
 	}
-	
+
 	if !g.isPaused {
 		g.ticks++
 		if g.ticks%g.speed == 0 {
 			g.UpdateGeneration()
 		}
 	}
-	
+
 	g.canvas = image.NewRGBA(image.Rect(0, 0, width, height))
 	for i, x := range g.cells {
 		for j, y := range x {
